@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VStack, Heading, Box, FormControl, FormLabel, FormErrorMessage, Button, Flex, HStack, Input, Select} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
@@ -11,7 +11,41 @@ const BookingForm = () => {
     const [bookingDate, setBookingDate] = useState("");
     const [event, setEvent] = useState("");
     const [time, setTime] = useState("");
+    const [availableTimes,setAvailableTimes] = useState([]);
+    const [formData, setFormData] = useState();
 
+    useEffect(()=>{
+        fetchBookingTimes(Date.now);
+    },[])
+    const fetchBookingTimes= async(bookingDate)=>{
+        try{
+            const res = await fetch('fetchApi(bookingDate))');
+            const data = await res.json();
+            setAvailableTimes(data);
+        }catch(error){
+            console.log(error);
+
+        }
+        
+    }
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+      };
+
+    const submitFormData= async(e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch('submitApi(formData)',{
+                method:'Post',
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+        } catch (error) {
+            console.log('submit error')
+        }
+    }
  const formik = useFormik({
     initialValues: {
         firstName: "",
@@ -20,7 +54,10 @@ const BookingForm = () => {
         time:"",
         
     }, 
+    onSubmit:(values )=>{
 
+    },
+ 
     validationSchema: Yup.object({
         firstName: Yup.string().required("Required"),
         email: Yup.string().email("Invalid email address").required("Required"),
@@ -57,19 +94,19 @@ const BookingForm = () => {
                                         id="firstName" 
                                         name="firstName" 
                                         value={firstName}
-                                        onChange={e=>setFirstName(e.target.value)}
+                                        onChange={handleChange}
                                         {...formik.getFieldProps("firstName")}></Input>
                                         <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
                                     </FormControl>
                                 </Box>
-                                <Box>
+                                   <Box>
                                     <FormControl>
                                         <FormLabel>Last Name</FormLabel>
                                         <Input 
                                         type={'text'} 
                                         id="LastName" 
                                         value={lastName}
-                                        onChange={e=>setLastName(e.target.value)}></Input>
+                                        onChange={handleChange}></Input>
                                     </FormControl>
                                 </Box>
                             </HStack>
@@ -81,7 +118,7 @@ const BookingForm = () => {
                                 type="email"  
                                 value={email} 
                                 placeholder="someone@example.com"
-                                onChange={e=>setFirstName(e.target.value)}
+                                onChange={handleChange}
                                 {...formik.getFieldProps("email")}/>
                                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
                             </FormControl>
@@ -94,13 +131,13 @@ const BookingForm = () => {
                                 max="10" 
                                 id="guests" 
                                 value={guests}
-                                onChange={e=>setGuests(e.target.value)}
+                                onChange={handleChange}
                                  {...formik.getFieldProps("guests")} />
                                 <FormErrorMessage>{formik.errors.guests}</FormErrorMessage>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Choose date</FormLabel>
-                                <Input type="date" id="res-date" value={bookingDate} onChange={e=>setBookingDate(e.target.value)}/>
+                                <Input type="date" id="res-date" value={bookingDate} onChange={handleChange}/>
                             </FormControl>
                             <FormControl isInvalid={!!formik.errors.time && formik.touched.time}>
                                 <FormLabel htmlFor="time">Choose time</FormLabel>
@@ -113,7 +150,7 @@ const BookingForm = () => {
                             </FormControl>
                             <FormControl isInvalid={!!formik.errors.event && formik.touched.event}>
                                 <FormLabel htmlFor="event">Choose event</FormLabel>
-                                <Select id="event" name="event" onChange={e=>{setEvent(e.target.value)}} {...formik.getFieldProps("event")}>
+                                <Select id="event" name="event" onChange={handleChange} {...formik.getFieldProps("event")}>
                                     <option value="Anniversary">Anniversary</option>
                                     <option value="Birthday">Birthday</option>
                                     <option value="Other">Other</option>
