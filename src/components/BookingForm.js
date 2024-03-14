@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { VStack, Heading, Box, FormControl, FormLabel, FormErrorMessage, Button, Flex, HStack, Input, Select} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 
 const BookingForm = () => {
+    const [firstName, setFristName] = useState("");
+    const [lastName, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [guests, setGuests] = useState("");
+    const [bookingDate, setBookingDate] = useState("");
 
  const formik = useFormik({
     initialValues: {
@@ -43,30 +49,30 @@ const BookingForm = () => {
                                 <Box>
                                     <FormControl isInvalid={!!formik.errors.firstName && formik.touched.firstName}>
                                         <FormLabel htmlFor="firstName" >First Name</FormLabel>
-                                        <Input type={'text'} id="firstName" name="firstName" {...formik.getFieldProps("firstName")}></Input>
+                                        <Input type={'text'} id="firstName" name="firstName" value={firstName} {...formik.getFieldProps("firstName")}></Input>
                                         <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
                                     </FormControl>
                                 </Box>
                                 <Box>
                                     <FormControl>
                                         <FormLabel>Last Name</FormLabel>
-                                        <Input type={'text'}></Input>
+                                        <Input type={'text'} id="LastName" value={lastName}></Input>
                                     </FormControl>
                                 </Box>
                             </HStack>
                             <FormControl isInvalid={!!formik.errors.email && formik.touched.email}>
                                 <FormLabel htmlFor="email">Email Address</FormLabel>
-                                <Input id="email" name="email" type="email" placeholder="email@example.com" {...formik.getFieldProps("email")}/>
+                                <Input id="email" name="email" type="email"  value={email} placeholder="someone@example.com" {...formik.getFieldProps("email")}/>
                                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
                             </FormControl>
                             <FormControl isInvalid={!!formik.errors.guests && formik.touched.guests}>
                                 <FormLabel>Number of guests</FormLabel>
-                                <Input type="number" placeholder="1" min="1" max="10" id="guests" {...formik.getFieldProps("guests")} />
+                                <Input type="number" placeholder="1" min="1" max="10" id="guests" value={guests} {...formik.getFieldProps("guests")} />
                                 <FormErrorMessage>{formik.errors.guests}</FormErrorMessage>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Choose date</FormLabel>
-                                <Input type="date" id="res-date"/>
+                                <Input type="date" id="res-date" value={bookingDate}/>
                             </FormControl>
                             <FormControl isInvalid={!!formik.errors.time && formik.touched.time}>
                                 <FormLabel htmlFor="time">Choose time</FormLabel>
