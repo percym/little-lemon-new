@@ -73,7 +73,7 @@ const Nav = () => {
                     </nav>
                     <nav>
                         <HStack>
-                            <Image src={require('../assets/logo.png')} alt={'logo'} width={'200'} height={'55'} />
+                            <Image src={require('../assets/logo.png')} alt={'some logo here'} width={'200'} height={'55'} />
                         </HStack>
                     </nav>
                 </HStack>
